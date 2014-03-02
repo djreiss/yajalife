@@ -1,0 +1,33 @@
+TODO:
+
+Current limitations/bugs:
+
+- let bugs read sensory input -- resources and other bugs nearby
+  (partly implemented)
+
+- if a bug does a jump_p into a neighbor, then the neighbor moves
+  away, the bug's pointer has to revert back into it's own program
+
+- if no room for a new bug on grid, replace oldest bug with new bug
+  (right now, we just don't add the new bug)
+
+
+Additions, new features, more complexity:
+
+- additional actions/capabilities/instructions in Genome
+
+- varying amounts of different resources (forced evolution)
+
+- allow resources to evolve just like the bugs do (or maybe just
+  occasionally introduce different populations of resources)... this
+  should lead to greater complexity evolving and competition between
+  resources and bugs
+
+- "portals" to other worlds, transmit bugs over the network;
+  experiment how isolation affects evolution
+
+
+Other:
+
+- Documentation
+
