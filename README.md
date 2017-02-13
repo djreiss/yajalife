@@ -1,5 +1,6 @@
-YajaLife, v1.0
-http://yajalife.sourceforge.net
+YajaLife, v1.21
+http://github.com/djreiss/yajalife
+----------
 
 WHAT IS IT?
 
@@ -71,11 +72,7 @@ fetch the Acme Labs' jar file "acme.jar" from http://koala.ilog.fr/
 ftp/pub/acme.jar (read the BSD-style license at http://www.acme.com/
 license.html), and add it to your Java classpath.
 
-NEW -- you may download a smaller version of the jar (only containing
-the GifEncoder-related classes) from http://yajalife.sourceforge.net/
-acme-gifencoder.jar.
-
-Command-line parameters are parsed using the gnu.getopt package. You
+ommand-line parameters are parsed using the gnu.getopt package. You
 will require the java-getopt.jar library to compile and run Yajalife.
 
 Yajalife also now requires the util.ucar.prefs "prefsAll.jar" package
@@ -87,14 +84,14 @@ _______________________________________________________________________
 TO COMPILE:
 
 See the note above about the Acme, gnu.getopt, and util.ucar.prefs
-Java libraries. Download and add them to your class path (or edit the
-Makefile).
+Java libraries. These are currently installed in the lib/ directory.
 
-Install a Java DK (anything newer than Java 1.1 will work).
+Install a Java DK (anything newer than Java 1.1 will work), and
+apache-ant.
 
-Edit the Makefile if necessary.
+Edit the build.xml file if necessary.
 
-Type "make" to create "yajalife.jar".
+Type "ant" to create "build/yajalife.jar".
 
 _______________________________________________________________________
 
@@ -106,7 +103,7 @@ Type "appletviewer yajalife.html"... OR ...
 
 Open yajalife.html in a Java-enabled web browser... OR ...
 
-Type "java -jar yajalife.jar 1"... OR ...
+Type "java -jar build/yajalife.jar 1"... OR ...
 
 Type "yajalife.sh" (if running Linux) or double click "yajalife.bat"
 (if running Windows).
