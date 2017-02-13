@@ -3,7 +3,7 @@ package djr.bugs;
 /**
  * Class <code>BitVector</code>
  *
- * @author <a href="mailto:astrodud@sourceforge.net">David Reiss</a>
+ * @author <a href="mailto:reiss@uw.edu">David Reiss</a>
  * @version 1.0
  */
 public class BitVector implements java.io.Serializable {

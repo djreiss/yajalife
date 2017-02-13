@@ -8,7 +8,7 @@ import java.util.Random;
 /**
  * Class <code>AWTUtils</code>
  *
- * @author <a href="mailto:astrodud@sourceforge.net">David Reiss</a>
+ * @author <a href="mailto:reiss@uw.edu">David Reiss</a>
  * @version 1.1 (Sat Nov 26 21:49:21 PST 2005)
  */
 public class AWTUtils {

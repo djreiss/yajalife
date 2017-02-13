@@ -5,7 +5,7 @@ import java.awt.*;
 /**
  * Class <code>YajaLifeApplet</code>
  *
- * @author <a href="mailto:astrodud@">astrodud</a>
+ * @author <a href="mailto:djreiss@">djreiss</a>
  * @version 1.0
  */
 public class YajaLifeApplet extends Applet {
