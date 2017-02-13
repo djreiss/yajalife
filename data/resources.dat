@@ -1,0 +1,26 @@
+# Name		reward				max		ins requred	outs required	global? 	instructions	program
+
+get		1.03,1.02,1.01			10000		1		0		1		0		--
+put		1.04,1.03,1.02			15000		0		1		1		0		--
+getput		1.05,1.04,1.03			20000		1		1		1		0		--
+
+
+get		1.05,1.04,1.03,1.02,1.01	1		1		0		0		0		--
+put		1.06,1.05,1.03,1.02,1.01	1		0		1		0		0		--
+getput		1.08,1.06,1.04,1.02,1.01	1		1		1		0		0		--
+
+echo		1.10,1.05,1.01			1		1		1		0		0		nop
+not		1.10,1.05,1.01			1		1		1		0		1		not
+
+a_and_b		1.15,1.05,1.01			1		2		1		0		1		neg nand
+a_or_b		1.15,1.05,1.01			1		2		1		0		1		neg nor
+
+a_minus_b	1.15,1.05,1.01			1		2		1		0		1		sub
+a_plus_b	1.20,1.10,1.05			1		2		1		0		1		add
+
+a_nand_b	1.10,1.05,1.01			1		2		1		0		1		nand
+a_nor_b		1.15,1.10,1.05			1		2		1		0		1		nor
+a_xor_b		1.15,1.10,1.05			1		2		1		0		1		xor
+a_plus_2b	1.20,1.12,1.05			1		2		1		0		2		shift_l nop_B add
+a_minus_2b	1.20,1.12,1.05			1		2		1		0		2		shift_l nop_B sub
+a_equ_b		1.15,1.10,1.05			1		2		2		0		1		dup

@@ -1,0 +1,40 @@
+package djr.util;
+
+/**
+ * Template class <code>Holder</code>.
+ *
+ * @author <a href="mailto:dreiss@systemsbiology.org">David Reiss</a>
+ * @version 1.90
+ */
+public class Holder<A> {
+   A value;
+
+   public Holder() {
+   }
+
+   public Holder( A val ) {
+      this.value = val;
+   }
+
+   public void setValue( A val ) {
+      this.value = val;
+   }
+
+   public A getValue() {
+      return value;
+   }
+
+   public String toString() {
+      return "" + getValue();
+   }
+
+   public static void main( String args[] ) {
+      for ( int i = 0; i < 100000; i ++ ) {
+      Holder<int> h1 = new Holder( 3 );
+      System.out.println( h1 );
+      Holder<int> h2 = new Holder( h1.getValue() + 4 );
+      System.out.println( h2 );
+      }
+   }
+}
+

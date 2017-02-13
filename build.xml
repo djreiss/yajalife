@@ -1,0 +1,299 @@
+<?xml version="1.0"?>
+<!-- build.xml - Build file for YajaLife -->
+<project name="YajaLife" default="jar" basedir=".">
+	
+	<!-- Change this to the name of your jar -->
+	<property name="jar.name" value="yajalife"/>
+
+	<!--  The directory containing library jar files -->	
+	<property name="lib.dir" value="lib"/>
+
+  	<!-- The temporary directory containing source code -->
+  	<property name="src.dir" value="src"/>
+
+  	<!-- Temporary build directories -->
+ 	<property name="build.dir" value="build"/>
+  	<property name="build.classes" value="${build.dir}/classes"/>
+	
+	<!-- Global "magic" property for <javac> -->
+	<property name="build.compiler" value="modern"/>
+	<!--<property name="build.compiler" value="jikes"/>-->
+	
+	<!-- Classpath with all lib JAR Files and all classes -->
+	<path id="classpath">	
+		<fileset dir="${lib.dir}"><include name="**/*.jar"/></fileset>
+		<pathelement location="${build.classes}"/>
+	</path>
+
+  	<!-- Get environment variables as ${env.ENV_VAR} -->
+        <property environment="env"/>
+
+  	<!-- Target to create the build directories prior to compilation -->
+  	<target name="prepare" unless="dont.prepare">
+    		<mkdir dir="${src.dir}"/>
+    		<mkdir dir="${build.dir}"/>
+    		<mkdir dir="${build.classes}"/>
+		<copy todir="${src.dir}/djr">
+			<fileset dir="djr">
+				<exclude name="**/*.class"/>
+				<exclude name="**/*.tgz"/>
+				<exclude name="**/*.html"/>
+				<exclude name="**/*.gif"/>
+				<exclude name="**/*README*"/>
+				<exclude name="**/*resources*"/>
+				<exclude name="**/*properties*"/>
+				<exclude name="**/crap/**"/>
+				<exclude name="**/awt/imagefilters/**"/>
+				<exclude name="**/awt/*Icon*.java"/>
+				<exclude name="**/awt-old/**"/>
+				<!--<exclude name="**/bugs/**"/>-->
+				<exclude name="**/d3d/**"/>
+				<exclude name="**/ftp/**"/>
+				<exclude name="**/motif/**"/>
+				<exclude name="**/ga/**"/>
+				<exclude name="**/align/**"/>
+                                <exclude name="**/util-old/**"/>
+                                <exclude name="**/bugs-old/**"/>
+                                <exclude name="**/util/dynamic/**"/>
+                                <exclude name="**/util/bio/**"/>
+                                <!--<exclude name="**/util/gui/**"/>-->
+                                <exclude name="**/util/ANSI.java"/>
+                                <exclude name="**/util/HTML.java"/>
+                                <exclude name="**/util/LoggedSystemOut.java"/>
+                                <exclude name="**/util/MessageQueue.java"/>
+                                <exclude name="**/util/Profiler.java"/>
+                                <exclude name="**/util/ShowClass.java"/>
+                                <exclude name="**/util/Tree.java"/>
+                                <exclude name="**/util/MemProfiler.java"/>
+                                <exclude name="**/util/PrimitiveWrapper.java"/>
+                                <exclude name="**/xmlrpc/**"/>
+                                <!--<exclude name="**/nr/**"/>-->
+                                <exclude name="**/remote/**"/>
+                                <exclude name="**/*Applet*.java"/>
+                                <exclude name="**/HTMLViewer.java"/>
+                                <exclude name="**/util/array/*Holder.*"/>
+                                <exclude name="**/util/array/*MultiArray.*"/>
+                                <exclude name="**/util/array/*Stack.*"/>
+<!--                            <exclude name="**/util/array/Bool*.java"/>
+                                <exclude name="**/util/array/Byte*.java"/>
+                                <exclude name="**/util/array/Char*.java"/>
+                                <exclude name="**/util/array/Double*.java"/>
+                                <exclude name="**/util/array/Float*.java"/>
+                                <exclude name="**/util/array/Int*.java"/>
+                                <exclude name="**/util/array/Long*.java"/>
+                                <exclude name="**/util/array/Short*.java"/>
+-->
+			</fileset>
+		</copy>
+		<antcall target="detemplify"/>
+		<!--<antcall target="remove_gui"/>-->
+  	</target>
+
+  	<target name="compile" depends="build" description="Compiles all source code."/>
+
+	<!-- Target to compile all code -->
+  	<target name="build" depends="prepare" description="Compiles all source code.">
+    		<javac srcdir="${src.dir}" destdir="${build.classes}" nowarn="on" 
+		                           source="1.4" listfiles="yes" debug="true">
+			<classpath refid="classpath"/>
+		</javac>
+		<echo message="DONE COMPILING"/>
+	</target>
+  	
+	<!--  Create jar file -->
+   	<target name="jar" depends="build" description="Creates jar file.">
+                <taskdef resource="genjar.properties" classpath="${lib.dir}/GenJar.jar"/>
+	        <genjar jarfile="${build.dir}/${jar.name}.jar">
+                        <classpath refid="classpath"/>
+			<class><fileset dir="${build.classes}">
+                                <exclude name="**/MakeJarRunnable.class"/>
+                        </fileset></class>
+                        <resource file="YajaLife.properties"/>
+                        <resource><fileset dir="resources"><include name="**/*"/></fileset></resource>
+                        <library jar="${lib.dir}/java-getopt-1.0.9.jar"/>
+                        <library jar="${lib.dir}/prefsAll.jar"/>
+                        <library jar="${lib.dir}/acme-gifencoder.jar"/>
+
+                        <classfilter>
+                                <exclude name="ptolemy."/>
+                                <exclude name="iubio."/>
+                                <exclude name="ucar."/>
+                                <exclude name="org.apache.tools.ant."/>
+                                <exclude name="org.xml."/>
+                        </classfilter>
+		</genjar>
+                <java classname="djr.util.MakeJarRunnable" fork="no"
+                                   classpathref="classpath">
+                          <arg value="${build.dir}/${jar.name}.jar"/>
+                          <arg value="djr.bugs.YajaLife"/>
+                          <arg value="${build.dir}/${jar.name}_r.jar"/>
+                </java>
+                <move file="${build.dir}/${jar.name}_r.jar" 
+                            tofile="${build.dir}/${jar.name}.jar"/>
+	</target>
+
+  	<target name="dist" depends="prepare" description="Create source tar.gz.">
+		<property file="VERSION"/>
+    		<mkdir dir="zzz"/>
+    		<mkdir dir="zzz/yajalife-${build.number.major}.${build.number.minor}"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}"><fileset dir="src"/></copy>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}" file="build.xml"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}" file="LICENSE"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}" file="README"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}" file="TODO"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}" file="VERSION"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}" file="COPYING"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}" file="COPYING.LIB"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}" file="Authors"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}/data"><fileset dir="data"/></copy>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}/resources"><fileset dir="resources"/></copy>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}" file="YajaLife.properties"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}" file="yajalife.html"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}" file="yajalife.bat"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}" file="yajalife.sh"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}/lib" file="lib/acme-gifencoder.jar"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}/lib" file="lib/acme-license.html"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}/lib" file="lib/GenJar.jar"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}/lib" file="lib/java-getopt-1.0.9.jar"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}/lib" file="lib/prefsAll.jar"/>
+                <copy todir="zzz/yajalife-${build.number.major}.${build.number.minor}/lib" file="lib/colt.jar"/>
+                <tar tarfile="yajalife-${build.number.major}.${build.number.minor}.tar.gz" 
+                         basedir="zzz/" compression="gzip"/>
+    		<delete dir="zzz"/>
+	</target>
+
+	<!-- Target to clean out all directories -->
+  	<target name="clean" description="Removes all generated files.">
+    		<delete dir="${src.dir}"/>
+    		<delete dir="${build.dir}"/>
+		<delete dir="${dist.dir}"/>
+  	</target>
+	
+        <target name="remove_gui" if="no.gui">
+    		<delete dir="${src.dir}/djr/motif/gui"/>
+    		<delete dir="${src.dir}/djr/util/gui"/>
+		<replace summary="no" dir="${src.dir}/djr" includes="**/*.java">
+			<replacefilter token="// START GUI" value="/* START GUI"/>
+			<replacefilter token="// END GUI" value="END GUI */"/>
+			<replacefilter token="public synchronized" value="public"/>
+		</replace>
+        </target>
+
+	<target name="detemplify">
+		<property name="array.dir" value="${src.dir}/djr/util/array"/>
+		<property name="ZERO" value="0"/>
+		<antcall target="detemp">
+			<param name="TTTYPE" value="Integer"/>
+			<param name="TTYPE" value="Int"/>
+			<param name="TYPE" value="int"/>
+		</antcall>
+		<antcall target="detemp">
+			<param name="TTTYPE" value="Double"/>
+			<param name="TTYPE" value="Double"/>
+			<param name="TYPE" value="double"/>
+		</antcall>
+		<replace summary="no" dir="${array.dir}" includes="Double*.java">
+			<replacefilter token="(double)" value=""/>
+		</replace>
+		<antcall target="detemp">
+			<param name="TTTYPE" value="Short"/>
+			<param name="TTYPE" value="Short"/>
+			<param name="TYPE" value="short"/>
+		</antcall>
+		<antcall target="detemp">
+			<param name="TTTYPE" value="Long"/>
+			<param name="TTYPE" value="Long"/>
+			<param name="TYPE" value="long"/>
+		</antcall>
+		<antcall target="detemp">
+			<param name="TTTYPE" value="Float"/>
+			<param name="TTYPE" value="Float"/>
+			<param name="TYPE" value="float"/>
+		</antcall>
+		<antcall target="detemp">
+			<param name="TTTYPE" value="Byte"/>
+			<param name="TTYPE" value="Byte"/>
+			<param name="TYPE" value="byte"/>
+		</antcall>
+		<antcall target="detemp">
+			<param name="TTTYPE" value="Character"/>
+			<param name="TTYPE" value="Char"/>
+			<param name="TYPE" value="char"/>
+		</antcall>
+		<replace summary="no" dir="${array.dir}" includes="Char*.java">
+			<replacefilter token="Character.parseChar( str[ i ] )" 
+			               value="str[ i ].charAt( 0 )"/>
+			<replacefilter token="- Character.MAX_VALUE" value="0"/>
+		</replace>
+		<antcall target="detemp">
+			<param name="TTTYPE" value="Boolean"/>
+			<param name="TTYPE" value="Bool"/>
+			<param name="TYPE" value="boolean"/>
+			<param name="ZERO" value="false"/>
+		</antcall>
+		<replace summary="no" dir="${array.dir}" includes="Bool*.java">
+			<replacefilter token="(boolean) i" value="true"/>
+			<replacefilter token="BooleanValue" value="booleanValue"/>
+			<replacefilter token="// NO BOOL" value="/* NO BOOL"/>
+			<replacefilter token="// END NO BOOL" value="END NO BOOL */"/>
+			<replacefilter token="/* BOOL ONLY" value="// BOOL ONLY"/>
+		</replace>
+		<antcall target="detemp">
+			<param name="TTTYPE" value="Object"/>
+			<param name="TTYPE" value="Obj"/>
+			<param name="TYPE" value="Object"/>
+			<param name="ZERO" value="null"/>
+		</antcall>
+		<delete verbose="true">
+			<fileset dir="${src.dir}/djr/util/array">
+				<include name="**/Obj*.java"/>
+				<exclude name="**/ObjVector.java"/>
+				<exclude name="**/ObjStack.java"/>
+			</fileset>
+		</delete>
+		<replace summary="no" dir="${array.dir}" includes="Obj*.java">
+			<replacefilter token="(Object) i" value="null"/>
+			<replacefilter token="val == data[ i ]" 
+			                       value="val.equals( data[ i ] )"/>
+			<replacefilter token="new Object( data[ cur ++ ] )" 
+			                       value="data[ cur ++ ]"/>
+			<replacefilter token="Object.toString( get( ind ) )" 
+			                       value="get( ind ).toString()"/>
+			<replacefilter token="new Object( get( cur ++ ) )" 
+			                       value="get( cur ++ )"/>
+		</replace>
+	</target>
+
+	<target name="detemp">
+		<property name="array.dir" value="${src.dir}/djr/util/array"/>
+		<copy    file="${array.dir}/TYPEUtils.jtempl"
+		       tofile="${array.dir}/${TTYPE}Utils.java"/>
+		<copy    file="${array.dir}/TYPEVector.jtempl"
+		       tofile="${array.dir}/${TTYPE}Vector.java"/>
+                <!--
+		<copy    file="${array.dir}/TYPEStack.jtempl"
+		       tofile="${array.dir}/${TTYPE}Stack.java"/>
+		<copy    file="${array.dir}/TYPEMultiArray.jtempl"
+		       tofile="${array.dir}/${TTYPE}MultiArray.java"/>
+		<copy    file="${array.dir}/TYPEHolder.jtempl"
+		       tofile="${array.dir}/${TTYPE}Holder.java"/>
+                -->
+		<replace summary="no" dir="${array.dir}" includes="${TTYPE}*.java">
+			<replacefilter token="TTTYPE" value="${TTTYPE}"/>
+			<replacefilter token="TTYPE" value="${TTYPE}"/>
+			<replacefilter token="TYPE" value="${TYPE}"/>
+			<replacefilter token="ZERO" value="${ZERO}"/>
+		</replace>
+	</target>
+
+	<!-- Run a class MYCLASS (from the ${build} directory) with the
+	                               command line 'MY ARGS' via:
+	     ant run -Dclass=${class} -Dargs='MY ARGS' -->
+	<target name="run" depends="compile">
+		<echo message="${class} ${args}"/>
+	        <java classname="${class}" fork="true" failonerror="true">
+                        <classpath refid="classpath"/>
+                        <arg line="${args}"/>
+                </java>
+	</target>
+</project>

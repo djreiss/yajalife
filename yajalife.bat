@@ -1,1 +1,1 @@
-java -J-Xmx128m -jar yajalife.jar 1
+java -J-Xmx128m -jar yajalife.jar

@@ -1,5 +1,12 @@
 TODO:
 
+- add the new instruction set from avida 2.0
+
+- use dynamic compilation for resources (and later, genome?)
+
+- allow different types of instructions to mutate by different 
+  amounts?
+
 Current limitations/bugs:
 
 - let bugs read sensory input -- resources and other bugs nearby
@@ -9,7 +16,7 @@ Current limitations/bugs:
   away, the bug's pointer has to revert back into it's own program
 
 - if no room for a new bug on grid, replace oldest bug with new bug
-  (right now, we just don't add the new bug)
+  (right now, we just don't add the new bug) - make this an option
 
 
 Additions, new features, more complexity:

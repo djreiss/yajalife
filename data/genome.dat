@@ -1,0 +1,80 @@
+# Nop commands
+nop 		do nothing
+nop_A		use register A or B or C for the previous command; also acts as marker
+nop_B		this is the default register used by commands, unless followed by a nop_A/B/C
+nop_C		?BX? denotes the current indicated register (?CX? is its complement)
+neg 		negate the following command (if applicable)
+
+# Flow-control
+if_n_eq		if ?BX? != ?CX? (?BX? == ?CX?) execute the following command, else skip it
+if_n_0		if ?BX? != 0    (?BX? == 0)    execute the following command, else skip it
+if_bit_1	if the last bit of ?BX? is 1 (0) execute the following command, else skip it
+if_greater	if ?BX? > ?CX?  (?BX? < ?CX?) execute the following command, else skip it
+jump_b		if there is a label, jump bwds (fwds) until its complement is found, else jump bwds by BX instructions
+jump_f		if there is a label, jump fwds (bwds) until its complement is found, else jump fwds by BX instructions
+call		Put the location of the next instruction on the stack, and do a jump_f
+return		Pop the top value from the stack and jump to that index in the program
+
+# Single argument math instructions
+rand		Set ?BX? to a random number (set ?CX?)
+shift_r	 	?BX? >> 1 (?BX? << 1)
+shift_l	 	?BX? << 1 (?BX? >> 1)
+bit_1		Set last bit of ?BX? to 1 (set first bit)
+inc 		?BX? ++ (?BX? --)
+dec 		?BX? -- (?BX? ++)
+zero		Set ?BX? to zero (set it to MAX_INT)
+push		push value in ?BX? into top of stack (bottom of stack)
+pop		pop from top of stack (bottom of stack) into ?BX?
+set_num		Set BX to the ternary equivalent of the label which follows. Take nop_A = 0, nop_B = 1, nop_C = 2. 
+#		So nop_C nop_A nop_B = 2 0 1 in ternary; 19 in decimal. If there is no label, set BX to 0. 
+
+# Double argument math instructions
+add		Set ?BX? to ?BX? + ?CX? (-)
+sub		Set ?BX? to ?BX? - ?CX? (+)
+nand		Set ?BX? to ?BX? NAND ?CX? (AND)
+nor		Set ?BX? to ?BX? NOR ?CX? (OR)
+xor		Set ?BX? to ?BX? XOR (^) ?CX? (set it to ?BX? ^ ~?CX?)
+not		Set ?BX? to ~?BX? (set it to ~?CX?)
+order		Place ?BX? and ?CX? in proper order such that ?CX? > ?BX? (?CX? < ?BX?)
+dup		Set ?BX? to the value of ?CX? (set it to ~?CX?)
+
+# Other (reproductive) instructions
+copy		Copy the command at the location pointed to by BX into the location pointed to by BX + AX
+read		Copy the command at the location BX from the program into CX
+write		Copy the command from CX into the location BX + AX
+allocate	Allocate ?BX? instructions of memory for the new genome, and return the start location of this memory in AX
+divide		Split the memory in this genome at ?AX?, placing the instructions beyond the dividing point into a new bug.
+if_n_cpy	Only execute the next line if the commands at locations BX and BX + AX are identical; otherwise skip it.
+search_f	Search forward for the complement label and return its distance in the BX register, and the size of the label that 
+search_b	followed in CX. If the complement label is not found, the distance is 0.
+inject		Similar to divide, but instead inject the code into the middle of another creature's genome. 
+#		The location in the other genome is chosen by complement labels.
+
+# I/O instructions
+get		Read in a value from the food grid into the input buffer and into ?CX?
+put		Write out the value in ?BX? to the output buffer and the food grid, and zero out ?BX?
+jump_p          Jump into another genome at the first occurence of the complement label. If no comp. label exists, jump to line BX.
+
+# Other instructions
+switch_reg	Switch current default register to its complement (e.g. A->B, B->C, C->A)
+switch_stack	Switch to next stack
+turn_r		Turn right (left)
+turn_l		Turn left (right)
+move_f		Move forward (backward)
+move_b		Move backward (forward)
+
+# Modify internal variables
+mod_cmut	Add ?BX? times 10^-4 to the copy-mutation rate
+mod_dd		Increment (decrement) the default offspring drop distance by 1
+mod_color	Add (subtract) the color of the creature based on the current register index
+gestate		Add ?BX? cycles to the gestating offspring's cycles pool
+#grow		Add (remove) ?BX? cycles to/from the size of the bug
+#armor		Add (remove) ?BX? cycles to/from the attack capability of the bug
+#steal		Steal from another bug -- cycles or register values or stack values or instructions from the in/out buffers
+#share		Allow another bug to steal cycles or register values or etc.
+#mod_mage	Set the maximum allowed age to ?BX? (add ?BX? to the maximum age allowed)
+
+# Sensory instructions (all sensors place the value obtained in ?AX?)
+#sense_r		Get the average red component in front of (behind) the creature
+#sense_g		Get the average green component in front of (behind) the creature
+#sense_b		Get the average blue component in front of (behind) the creature

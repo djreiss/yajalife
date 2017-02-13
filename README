@@ -1,5 +1,5 @@
 YajaLife, v1.0
-http://yajalife.
+http://yajalife.sourceforge.net
 
 WHAT IS IT?
 
@@ -72,16 +72,25 @@ ftp/pub/acme.jar (read the BSD-style license at http://www.acme.com/
 license.html), and add it to your Java classpath.
 
 NEW -- you may download a smaller version of the jar (only containing
-the GifEncoder-related classes) from http://yajalife./
+the GifEncoder-related classes) from http://yajalife.sourceforge.net/
 acme-gifencoder.jar.
+
+Command-line parameters are parsed using the gnu.getopt package. You
+will require the java-getopt.jar library to compile and run Yajalife.
+
+Yajalife also now requires the util.ucar.prefs "prefsAll.jar" package
+from (where?). This library enables displaying and editing of
+command-line parameters using a GUI.
 
 _______________________________________________________________________
 
 TO COMPILE:
 
-See the note above about the Acme Java library.
+See the note above about the Acme, gnu.getopt, and util.ucar.prefs
+Java libraries. Download and add them to your class path (or edit the
+Makefile).
 
-Install a Java DK (anything older than Java 1.1 will work).
+Install a Java DK (anything newer than Java 1.1 will work).
 
 Edit the Makefile if necessary.
 
@@ -114,4 +123,9 @@ interested in pursuing this. Some ideas I have are listed in the TODO
 program, and in various comments throughout the programs source code.
 
 The source code is distributed under the GPL (see COPYING).
+
+------------------------------------------------------------
+
+Source for ptplot.jar :
+http://ptolemy.eecs.berkeley.edu/java/ptplot5.5/ptolemy/doc/index.htm
 
